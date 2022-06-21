@@ -1,7 +1,7 @@
 # esphome-externalcomponents
 Some external components for [esphome](https://esphome.io/index.html).
 ## Usage
-[See here for how to use external components.](https://esphome.io/components/external_components.html).
+[See here for how to use external components](https://esphome.io/components/external_components.html).
 I've included some examples also.
 ## Components
 ### beam_binary_sensor
@@ -18,5 +18,5 @@ Usage is similar to a [gpio_binary_sensor](https://esphome.io/components/binary_
 | Config | Required? | Type | Description |
 | --- | --- | --- | --- |
 | `pin_sensor` | required | pin_schema | pin for the sensor input; as per 'pin' configuration of gpio_binary_sensor |
-| `pin_driver | required | pin_schema | pin for the output led (or similar) |
+| `pin_driver` | required | pin_schema | pin for the output led (or similar) |
 | `pin_output` | optional | pin_schema | pin to provide the output of this beam sensor directly (e.g. for a local led) |
