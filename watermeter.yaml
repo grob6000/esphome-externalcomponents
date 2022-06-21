@@ -1,0 +1,78 @@
+esphome:
+  name: watermeter
+
+esp8266:
+  board: esp01_1m
+
+external_components:
+  source:
+    type: local
+    path: ./components
+#  source:
+#    type: git
+#    url: https://github.com/grob6000/...
+#    username: !secret github_username
+#    password: !secret github_token
+
+# Enable logging
+logger:
+  #baud_rate: 0
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret encryption1
+
+ota:
+  password: "da9a71b09eaa2394deb3dfe42091980b"
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+    hidden: true
+  domain: ".localdomain"
+  fast_connect: true
+
+#status_led:
+#  pin:
+#    number: 2
+#    inverted: true
+
+globals:
+  - id: pulsecount
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+# water meter sensor for use by home assistant
+sensor:
+  - platform: template
+    id: watermeter
+    name: Water Meter Total
+    update_interval: 60s
+    lambda: |-
+      return (float)id(pulsecount) * 1.0f;
+    unit_of_measurement: L
+    state_class: total_increasing
+
+# for use by esphome only
+beam_binary_sensor:
+  id: pulsesensor
+  name: Water Meter Pulse Sensor
+  internal: true
+  on_click:
+    min_length: 10ms
+    then:
+      - lambda: |-
+          id(pulsecount) += 1;
+  pin_sensor:
+    number: 14
+    inverted: true
+  pin_driver:
+    number: 12
+  pin_output:
+    number: 2
+    inverted: true
+
