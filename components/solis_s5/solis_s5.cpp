@@ -21,7 +21,6 @@ void SolisS5Component::setup() {
 void SolisS5Component::loop() {
   static char buffer[SOLIS_S5_SERIAL_BUFFER_LEN] = {0};
   static uint8_t index = 0;
-  static uint8_t expectedlength = 0;
   static uint8_t loopwait = 0;
 
   while (available()) {
@@ -44,6 +43,8 @@ void SolisS5Component::loop() {
         }
         if (csum == buffer[msglen+4]) { // checksum ok
           if ((buffer[2] == 161) && (msglen == 80)) { // inverter response; parse and update sensors
+
+            ESP_LOGD("inverter reponse received; processing");
 
             if (this->vdc1sensor != nullptr) {
               uint16_t v = buffer[4] + buffer[5]*256;
@@ -134,8 +135,8 @@ void SolisS5Component::loop() {
         } else {
           ESP_LOGD(TAG, "message checksum fail; discarding. csum = 0x%02X, check = 0x%02X", buffer[msglen+4], csum);
         }
-      } else if ((msglen == 0) && (index == 55)) {
-        ESP_LOGD(TAG, "wifi stick command received");
+      } else if ((msglen == 0) && (index == 55)) { // wifi stick command
+        ESP_LOGD(TAG, "wifi stick command received; ignoring");
       } else {
         ESP_LOGD(TAG, "message insufficient length (%d); discarding", msglen);
       }
