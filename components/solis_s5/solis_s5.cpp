@@ -44,7 +44,7 @@ void SolisS5Component::loop() {
         if (csum == buffer[msglen+4]) { // checksum ok
           if ((buffer[2] == 161) && (msglen == 80)) { // inverter response; parse and update sensors
 
-            ESP_LOGD("inverter reponse received; processing");
+            ESP_LOGD(TAG, "inverter reponse received; processing");
 
             if (this->vdc1sensor != nullptr) {
               uint16_t v = buffer[4] + buffer[5]*256;
