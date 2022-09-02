@@ -1,0 +1,82 @@
+esphome:
+  name: soliss5
+
+external_components:
+  source:
+     type: local
+     path: ./components
+#  source:
+#    type: git
+#    url: https://github.com/grob6000/esphome-externalcomponents
+  
+esp8266:
+  board: esp12e
+
+# Enable logging
+logger:
+  baud_rate: 0
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret encryption1
+
+ota:
+  password: !secret otapassword1
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+    hidden: true
+  domain: !secret domain
+  fast_connect: true
+
+uart:
+  id: uart_bus
+  tx_pin: 1
+  rx_pin: 3
+  baud_rate: 9600
+
+solis_s5:
+  id: solisinverter
+  uart_id: uart_bus
+  voltage_dc_1:
+    name: "Solis Inverter DC Voltage 1"
+  voltage_dc_2:
+    name: "Solis Inverter DC Voltage 2"
+  voltage_ac_u:
+    name: "Solis Inverter AC Voltage U"
+  voltage_ac_v:
+    name: "Solis Inverter AC Voltage V"
+  voltage_ac_w:
+    name: "Solis Inverter AC Voltage W"
+  current_dc_1:
+    name: "Solis Inverter DC Current 1"
+  current_dc_2:
+    name: "Solis Inverter DC Current 2"
+  current_ac_u:
+    name: "Solis Inverter AC Current U"
+  current_ac_v:
+    name: "Solis Inverter AC Current V"
+  current_ac_w:
+    name: "Solis Inverter AC Current W"
+  power_dc_1:
+    name: "Solis Inverter DC Power 1"
+  power_dc_2:
+    name: "Solis Inverter DC Power 2"
+  power_ac_total:
+    name: "Solis Inverter AC Power Total"
+  va_ac_total:
+    name: "Solis Inverter AC VA Total"
+  powerfactor_ac:
+    name: "Solis Inverter AC Power Factor"
+  energy_today:
+    name: "Solis Inverter Energy Today"
+  energy_thismonth:
+    name: "Solis Inverter Energy This Month"
+  energy_total:
+    name: "Solis Inverter Energy Total"
+  temperature_igbt:
+    name: "Solis Inverter IGBT Temperature"
