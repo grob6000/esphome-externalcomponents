@@ -6,7 +6,7 @@
 #include "esphome/core/log.h"
 #include "solis_s5.h"
 
-#define SOLIS_S5_LOOP_WAIT 2
+#define SOLIS_S5_LOOP_WAIT 10
 #define SOLIS_S5_SERIAL_BUFFER_LEN 150
 
 namespace esphome {
