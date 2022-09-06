@@ -2,12 +2,12 @@ esphome:
   name: soliss5
 
 external_components:
-#  source:
-#     type: local
-#     path: ./components
   source:
-    type: git
-    url: https://github.com/grob6000/esphome-externalcomponents
+     type: local
+     path: ./components
+#  source:
+#    type: git
+#    url: https://github.com/grob6000/esphome-externalcomponents
   
 esp8266:
   board: esp12e
@@ -15,12 +15,15 @@ esp8266:
 # Enable logging
 logger:
   baud_rate: 0
-  level: DEBUG
+  level: INFO
 
 # Enable Home Assistant API
 api:
   encryption:
     key: !secret encryption1
+
+web_server:
+  port: 80
 
 ota:
   password: !secret otapassword1

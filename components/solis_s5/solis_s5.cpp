@@ -6,7 +6,7 @@
 #include "esphome/core/log.h"
 #include "solis_s5.h"
 
-#define SOLIS_S5_LOOP_WAIT 10
+#define SOLIS_S5_LOOP_WAIT 3
 #define SOLIS_S5_SERIAL_BUFFER_LEN 150
 
 namespace esphome {
@@ -34,6 +34,7 @@ void SolisS5Component::loop() {
   }
   
   if (loopwait > SOLIS_S5_LOOP_WAIT) { // some time has passed without receiving another character. this should be the end of a message.
+    ESP_LOGV(TAG, "message recieved len=%d", index);
     if (buffer[0] == 126) { // message starts with the right preamble
       uint8_t msglen = buffer[3];
       if (index == msglen + 5) { // messasge has correct length
@@ -42,9 +43,10 @@ void SolisS5Component::loop() {
           csum += buffer[i];
         }
         if (csum == buffer[msglen+4]) { // checksum ok
+        
           if ((buffer[2] == 161) && (msglen == 80)) { // inverter response; parse and update sensors
 
-            ESP_LOGD(TAG, "inverter reponse received; processing");
+            ESP_LOGD(TAG, "inverter data received");
 
             if (this->vdc1sensor != nullptr) {
               uint16_t v = buffer[4] + buffer[5]*256;
@@ -89,19 +91,22 @@ void SolisS5Component::loop() {
             }
 
             if (this->pdc1sensor != nullptr) {
-              uint16_t v = buffer[4] + buffer[5]*256;
-              uint16_t i = buffer[6] + buffer[7]*256;
-              this->pdc1sensor->publish_state((float)v * (float)i * 0.01f);
+              uint16_t v1 = buffer[4] + buffer[5]*256;
+              uint16_t i1 = buffer[6] + buffer[7]*256;
+              this->pdc1sensor->publish_state((float)v1 * (float)i1 * 0.01f);
             }
+            
             if (this->pdc2sensor != nullptr) {
-              uint16_t v = buffer[28] + buffer[29]*256;
-              uint16_t i = buffer[30] + buffer[31]*256;
-              this->pdc1sensor->publish_state((float)v * (float)i * 0.01f);
+              uint16_t v2 = buffer[28] + buffer[29]*256;
+              uint16_t i2 = buffer[30] + buffer[31]*256;
+              this->pdc2sensor->publish_state((float)v2 * (float)i2 * 0.01f);
             }
+            
             if (this->pactotalsensor != nullptr) {
               uint16_t v = buffer[59] + buffer[60]*256;
               this->pactotalsensor->publish_state((float)v);
             }
+            
             if (this->vaactotalsensor != nullptr) {
               uint16_t v = buffer[65] + buffer[66]*256;
               this->vaactotalsensor->publish_state((float)v);
@@ -128,149 +133,31 @@ void SolisS5Component::loop() {
               uint16_t v = buffer[12] + buffer[13]*256;
               this->tigbtsensor->publish_state((float)v*0.1f);
             }
-
+  
           } else if ((buffer[2] == 193) && (msglen == 40)) { // inverter config response
             ESP_LOGD(TAG, "inverter config response received");
           }
+          
         } else {
           ESP_LOGD(TAG, "message checksum fail; discarding. csum = 0x%02X, check = 0x%02X", buffer[msglen+4], csum);
         }
       } else if ((msglen == 0) && (index == 55)) { // wifi stick command
         ESP_LOGD(TAG, "wifi stick command received; ignoring");
       } else {
-        ESP_LOGD(TAG, "message insufficient length (%d); discarding", msglen);
+        ESP_LOGD(TAG, "message insufficient length (requested: %d, received: %d); discarding", msglen+5, index);
       }
+    } else {
+      ESP_LOGD(TAG, "message received, invalid start character");
     }
     // reset message, ready for next one
     loopwait = 0;
     index = 0;
   }
 
-/*
-  if ((index >= 17) && (buffer[index-1] == '\n')) {
-    // strip
-    buffer[index-1] = 0;
-    if (buffer[index-2]=='\r') { buffer[index-2] = 0; }
-    // log input
-    ESP_LOGD(TAG, "Received: %s", buffer);
-    // get data
-    uint8_t b_status = hex2byte(&buffer[0]);
-    StatusStruct *status = reinterpret_cast<StatusStruct *>(&b_status);
-    uint8_t b_mode = hex2byte(&buffer[2]);
-    ModeStruct *mode = reinterpret_cast<ModeStruct *>(&b_mode);
-    uint8_t b_io = hex2byte(&buffer[4]);
-    int16_t drift = hex2byte(&buffer[6])*0x100 + hex2byte(&buffer[8]);
-    int16_t tz = hex2byte(&buffer[10])*0x100 + hex2byte(&buffer[12]);
-    // calculate checksum
-    uint8_t csum_check = 0;
-    uint8_t i = 0;
-    for (i = 0; i < strlen(buffer); i++) {
-      if (buffer[i] == '*') { break; }
-      csum_check ^= buffer[i];
-    }
-    uint8_t b_csum = hex2byte(&buffer[i+1]);
-    ESP_LOGD(TAG, "csum received: 0x%02X csum calculated: 0x%02X", b_csum, csum_check);
-    if (b_csum == csum_check) {
-      // gps sensor
-      if (this->gpssensor != nullptr) {
-        if (status->gps_hascomms) {
-          if (status->gps_hasfix) {
-            this->gpssensor->publish_state("OK");
-          } else if (status->gps_hastime) {
-            this->gpssensor->publish_state("No Fix");
-          } else {
-            this->gpssensor->publish_state("Init");
-          }
-        } else {
-          this->gpssensor->publish_state("No Comms");
-        }
-      }
-      // sync sensor
-      if (this->syncsensor != nullptr) {
-        const char* s;
-        switch (mode->syncstate) {
-          case Ok:
-            s = "OK";
-            break;
-          case Begin:
-            s = "Begin";
-            break;
-          case ZeroM0:
-            s = "Zero M";
-            break;
-          case ZeroH:
-            s = "Zero H";
-            break;
-          case SetH:
-            s = "Set H";
-            break;
-          case SetM:
-            s = "Set M";
-            break;
-          case WaitMark:
-            s = "Wait Mark";
-            break;
-          case None:
-            s = "None";
-            break;
-          case Error:
-          default:
-            s = "Error";
-            break;
-        }
-        this->syncsensor->publish_state(s);
-      }
-      // track sensor
-      if (this->tracksensor != nullptr) {
-        if (status->time_error) {
-          this->tracksensor->publish_state("Error");
-        } else if (status->time_drift) {
-          this->tracksensor->publish_state("Drift");
-        } else {
-          this->tracksensor->publish_state("OK");
-        }
-      }
-      // run sensor
-      if (this->run_ok != nullptr) {
-        this->run_ok->publish_state(status->run_ok);
-      }
-      // drift sensor
-      if (this->driftsensor != nullptr) {
-        this->driftsensor->publish_state(drift);
-      }
-      // io sensors
-      if (this->zero_m0 != nullptr) {
-        this->zero_m0->publish_state((bool)(b_io & 0x01));
-      }
-      if (this->zero_m00 != nullptr) {
-        this->zero_m00->publish_state((bool)(b_io & 0x02));
-      }
-      if (this->zero_h0 != nullptr) {
-        this->zero_h0->publish_state((bool)(b_io & 0x04));
-      }
-      if (this->zero_h00 != nullptr) {
-        this->zero_h00->publish_state((bool)(b_io & 0x08));
-      }
-      if (this->run_in != nullptr) {
-        this->run_out->publish_state((bool)(b_io & 0x10));
-      }
-      if (this->run_out != nullptr) {
-        this->run_in->publish_state((bool)(b_io & 0x20));
-      }
-      if (this->tzsensor != nullptr) {
-        char s[8];
-        sprintf(s, "%s%02d:%02d", (tz>=0) ? "+" : "-", abs(tz)/60, abs(tz)%60);
-        this->tzsensor->publish_state(s);
-      }
-    } // csum check
-    // reset buffer index
-    index = 0;
-  } 
-  */
 }
 
 void SolisS5Component::dump_config() {
-  ESP_LOGCONFIG(TAG, "SolisS5Component");
+  ESP_LOGCONFIG(TAG, "Solis S5 Component");
 }
 
 } // namespace dekacontroller

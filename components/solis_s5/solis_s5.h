@@ -65,7 +65,6 @@ class SolisS5Component : public Component, public uart::UARTDevice {
 
     sensor::Sensor *tigbtsensor;
 
-    uint8_t hex2byte(char* s);
 };
 
 } // namespace solis_s5

@@ -11,6 +11,7 @@ AUTO_LOAD = ['uart', 'sensor', 'text_sensor', 'binary_sensor']
 CONF_VDC_1 = "voltage_dc_1"
 CONF_IDC_1 = "current_dc_1"
 CONF_PDC_1 = "power_dc_1"
+
 CONF_VDC_2 = "voltage_dc_2"
 CONF_IDC_2 = "current_dc_2"
 CONF_PDC_2 = "power_dc_2"
@@ -66,7 +67,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_VAAC_TOTAL):
         sensor.sensor_schema(device_class=DEVICE_CLASS_POWER,unit_of_measurement=UNIT_VOLT_AMPS,accuracy_decimals=0,state_class=STATE_CLASS_MEASUREMENT).extend(),    
     cv.Optional(CONF_PFAC):
-        sensor.sensor_schema(device_class=DEVICE_CLASS_POWER_FACTOR,accuracy_decimals=3,state_class=STATE_CLASS_MEASUREMENT).extend(),
+        sensor.sensor_schema(device_class=DEVICE_CLASS_POWER_FACTOR,accuracy_decimals=2,state_class=STATE_CLASS_MEASUREMENT).extend(),
 
     cv.Optional(CONF_E_DAY):
         sensor.sensor_schema(device_class=DEVICE_CLASS_ENERGY,unit_of_measurement=UNIT_KILOWATT_HOURS,accuracy_decimals=1,state_class=STATE_CLASS_TOTAL_INCREASING).extend(),    
@@ -147,7 +148,7 @@ def to_code(config):
     if CONF_PDC_2 in config:
         conf = config[CONF_PDC_2]
         sens = yield sensor.new_sensor(conf)
-        cg.add(var.set_vdc_2_sensor(sens))
+        cg.add(var.set_pdc_2_sensor(sens))
 
     if CONF_PAC_TOTAL in config:
         conf = config[CONF_PAC_TOTAL]
