@@ -113,7 +113,7 @@ void SolisS5Component::loop() {
             }
             if (this->pfacsensor != nullptr) {
               uint16_t v = buffer[68] + buffer[69]*256;
-              this->pfacsensor->publish_state((float)v * 0.01f);
+              this->pfacsensor->publish_state((float)v * 0.1f);
             }            
 
             if (this->edaysensor != nullptr) {
