@@ -6,7 +6,7 @@
 //#include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/uart/uart.h"
 
-#define SOLIS_S5_LOOP_WAIT 5
+#define SOLIS_S5_LOOP_WAIT 3
 #define SOLIS_S5_SERIAL_BUFFER_LEN 150
 #define SOLIS_S5_SENSOR_COUNT 19
 
