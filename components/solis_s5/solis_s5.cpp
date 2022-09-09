@@ -166,15 +166,15 @@ void SolisS5Component::loop() {
           if ((buffer[2] == 161) && (msglen == 80)) { // inverter response
             memcpy(this->messagedata,buffer,SOLIS_S5_SERIAL_BUFFER_LEN); // copy message for processing on next update cycle
             this->messagelength = index; // length > 0 indicates the message data has been updated / ready for parsing
-            ESP_LOGV(TAG, "inverter data received");
+            ESP_LOGD(TAG, "inverter data received");
           } else if ((buffer[2] == 193) && (msglen == 40)) { // inverter config response
-            ESP_LOGV(TAG, "inverter config response received");
+            ESP_LOGD(TAG, "inverter config response received");
           }
         } else {
           ESP_LOGV(TAG, "message checksum fail; discarding. csum = 0x%02X, check = 0x%02X", buffer[msglen+4], csum);
         }
       } else if ((msglen == 0) && (index == 55)) { // wifi stick command
-        ESP_LOGV(TAG, "wifi stick command received; ignoring");
+        ESP_LOGD(TAG, "wifi stick command received; ignoring");
       } else {
         ESP_LOGV(TAG, "message insufficient length (requested: %d, received: %d); discarding", msglen+5, index);
       }
