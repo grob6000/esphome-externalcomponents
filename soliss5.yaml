@@ -11,11 +11,10 @@ external_components:
   
 esp8266:
   board: esp12e
-
+  
 # Enable logging
 logger:
-  baud_rate: 0
-  level: INFO
+  baud_rate: 9600
 
 # Enable Home Assistant API
 api:
@@ -36,50 +35,97 @@ wifi:
   domain: !secret domain
   fast_connect: true
 
+sensor:
+  - platform: uptime
+    name: Solis Inverter ESPHome Uptime
+    update_interval: 60s
+  - platform: wifi_signal
+    name: Solis Inverter ESPHome Wifi Signal
+    update_interval: 60s
+    
 uart:
   id: uart_bus
-  tx_pin: 1
+  #tx_pin: 1
   rx_pin: 3
   baud_rate: 9600
 
 solis_s5:
   id: solisinverter
   uart_id: uart_bus
-  voltage_dc_1:
-    name: "Solis Inverter DC Voltage 1"
-  voltage_dc_2:
-    name: "Solis Inverter DC Voltage 2"
-  voltage_ac_u:
-    name: "Solis Inverter AC Voltage U"
-  voltage_ac_v:
-    name: "Solis Inverter AC Voltage V"
-  voltage_ac_w:
-    name: "Solis Inverter AC Voltage W"
-  current_dc_1:
-    name: "Solis Inverter DC Current 1"
-  current_dc_2:
-    name: "Solis Inverter DC Current 2"
+  update_interval: 60s
+  #voltage_dc_1:
+  #  name: "Solis Inverter DC Voltage 1"
+  #  filters:
+  #    - throttle_average: 60s
+  #voltage_dc_2:
+  #  name: "Solis Inverter DC Voltage 2"
+  #  filters:
+  #    - throttle_average: 60s
+  #voltage_ac_u:
+  #  name: "Solis Inverter AC Voltage U"
+  #  filters:
+  #    - throttle_average: 60s
+  #voltage_ac_v:
+  #  name: "Solis Inverter AC Voltage V"
+  #  filters:
+  #    - throttle_average: 60s
+  #voltage_ac_w:
+  #  name: "Solis Inverter AC Voltage W"
+  #  filters:
+  #    - throttle_average: 60s
+  #current_dc_1:
+  #  name: "Solis Inverter DC Current 1"
+  #  filters:
+  #    - throttle_average: 60s
+  #current_dc_2:
+  #  name: "Solis Inverter DC Current 2"
+  #  filters:
+  #    - throttle_average: 60s
   current_ac_u:
     name: "Solis Inverter AC Current U"
+    filters:
+      - throttle: 60s
   current_ac_v:
     name: "Solis Inverter AC Current V"
+    filters:
+      - throttle: 60s
   current_ac_w:
     name: "Solis Inverter AC Current W"
+    filters:
+      - throttle: 60s
   power_dc_1:
     name: "Solis Inverter DC Power 1"
+    filters:
+      - throttle: 15s
   power_dc_2:
     name: "Solis Inverter DC Power 2"
+    filters:
+      - throttle: 15s
   power_ac_total:
     name: "Solis Inverter AC Power Total"
-  va_ac_total:
-    name: "Solis Inverter AC VA Total"
-  powerfactor_ac:
-    name: "Solis Inverter AC Power Factor"
+    filters:
+      - throttle: 15s
+  #va_ac_total:
+  #  name: "Solis Inverter AC VA Total"
+  #  filters:
+  #    - throttle_average: 60s
+  #powerfactor_ac:
+  #  name: "Solis Inverter AC Power Factor"
+  #  filters:
+  #    - throttle_average: 60s
   energy_today:
     name: "Solis Inverter Energy Today"
-  energy_thismonth:
-    name: "Solis Inverter Energy This Month"
+    filters:
+      - throttle: 60s
+  #energy_thismonth:
+  #  name: "Solis Inverter Energy This Month"
+  #  filters:
+  #    - throttle: 60s
   energy_total:
     name: "Solis Inverter Energy Total"
+    filters:
+      - throttle: 60s
   temperature_igbt:
     name: "Solis Inverter IGBT Temperature"
+    filters:
+      - throttle: 60s

@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome.components import sensor, binary_sensor, text_sensor, uart
 from esphome.const import *
 solis_s5_ns = cg.esphome_ns.namespace('solis_s5')
-SolisS5Component = solis_s5_ns.class_('SolisS5Component', cg.Component)
+SolisS5Component = solis_s5_ns.class_('SolisS5Component', cg.PollingComponent)
 
 DEPENDENCIES = ['uart']
 AUTO_LOAD = ['uart', 'sensor', 'text_sensor', 'binary_sensor']
@@ -79,7 +79,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_T_IGBT):
         sensor.sensor_schema(device_class=DEVICE_CLASS_TEMPERATURE,unit_of_measurement=UNIT_CELSIUS,accuracy_decimals=1,state_class=STATE_CLASS_MEASUREMENT).extend(),       
 
-}).extend(cv.COMPONENT_SCHEMA).extend(uart.UART_DEVICE_SCHEMA)
+}).extend(cv.polling_component_schema('60s')).extend(uart.UART_DEVICE_SCHEMA)
 
 def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])

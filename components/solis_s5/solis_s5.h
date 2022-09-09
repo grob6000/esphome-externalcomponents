@@ -6,14 +6,23 @@
 //#include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/uart/uart.h"
 
+#define SOLIS_S5_LOOP_WAIT 5
+#define SOLIS_S5_SERIAL_BUFFER_LEN 150
+
 namespace esphome {
 namespace solis_s5 {
 
-class SolisS5Component : public Component, public uart::UARTDevice {
+typedef struct {
+  uint8_t * data;
+  uint8_t length;
+} SolisS5Message;
+
+class SolisS5Component : public PollingComponent, public uart::UARTDevice {
   public:
 
     void setup() override;
     void loop() override;
+    void update() override;
     void dump_config() override;
 
     void set_vdc_1_sensor(sensor::Sensor *s) { vdc1sensor = s; }
@@ -64,6 +73,9 @@ class SolisS5Component : public Component, public uart::UARTDevice {
     sensor::Sensor *etotalsensor;
 
     sensor::Sensor *tigbtsensor;
+
+    uint8_t messagedata[SOLIS_S5_SERIAL_BUFFER_LEN] = {0};
+    uint8_t messagelength = 0;
 
 };
 
