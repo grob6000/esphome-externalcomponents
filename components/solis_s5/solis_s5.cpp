@@ -16,6 +16,129 @@ void SolisS5Component::setup() {
 }
 
 void SolisS5Component::loop() {
+
+  if (this->sensorupdateprogress > 0) {
+    switch (this->sensorupdateprogress) {
+      case 19:
+        if (this->vdc1sensor != nullptr) {
+          uint16_t v = this->messagedata[4] + this->messagedata[5]*256;
+          this->vdc1sensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 18:
+        if (this->vdc2sensor != nullptr) {
+          uint16_t v = this->messagedata[28] + this->messagedata[29]*256;
+          this->vdc2sensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 17:
+        if (this->vacusensor != nullptr) {
+          uint16_t v = this->messagedata[8] + this->messagedata[9]*256;
+          this->vacusensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 16:
+        if (this->vacvsensor != nullptr) {
+          uint16_t v = this->messagedata[74] + this->messagedata[75]*256;
+          this->vacvsensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 15:
+        if (this->vacwsensor != nullptr) {
+          uint16_t v = this->messagedata[70] + this->messagedata[71]*256;
+          this->vacwsensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 14:
+        if (this->idc1sensor != nullptr) {
+          uint16_t v = this->messagedata[6] + this->messagedata[7]*256;
+          this->idc1sensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 13:
+        if (this->idc2sensor != nullptr) {
+          uint16_t v = this->messagedata[30] + this->messagedata[31]*256;
+          this->idc2sensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 12:
+        if (this->iacusensor != nullptr) {
+          uint16_t v = this->messagedata[10] + this->messagedata[11]*256;
+          this->iacusensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 11:
+        if (this->iacvsensor != nullptr) {
+          uint16_t v = this->messagedata[76] + this->messagedata[77]*256;
+          this->iacvsensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 10:
+        if (this->iacwsensor != nullptr) {
+          uint16_t v = this->messagedata[72] + this->messagedata[73]*256;
+          this->iacwsensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 9:
+        if (this->pdc1sensor != nullptr) {
+          uint16_t v1 = this->messagedata[4] + this->messagedata[5]*256;
+          uint16_t i1 = this->messagedata[6] + this->messagedata[7]*256;
+          this->pdc1sensor->publish_state((float)v1 * (float)i1 * 0.01f);
+        }
+        break;
+      case 8:
+        if (this->pdc2sensor != nullptr) {
+          uint16_t v2 = this->messagedata[28] + this->messagedata[29]*256;
+          uint16_t i2 = this->messagedata[30] + this->messagedata[31]*256;
+          this->pdc2sensor->publish_state((float)v2 * (float)i2 * 0.01f);
+        }
+        break;
+      case 7:
+        if (this->pactotalsensor != nullptr) {
+          uint16_t v = this->messagedata[59] + this->messagedata[60]*256;
+          this->pactotalsensor->publish_state((float)v);
+        }
+        break;
+      case 6:
+        if (this->vaactotalsensor != nullptr) {
+          uint16_t v = this->messagedata[65] + this->messagedata[66]*256;
+          this->vaactotalsensor->publish_state((float)v);
+        }
+        break;
+      case 5:
+        if (this->pfacsensor != nullptr) {
+          uint16_t v = this->messagedata[68] + this->messagedata[69]*256;
+          this->pfacsensor->publish_state((float)v * 0.1f);
+        }
+        break;
+      case 4:            
+        if (this->edaysensor != nullptr) {
+          uint16_t v = this->messagedata[37] + this->messagedata[38]*256;
+          this->edaysensor->publish_state((float)v*0.1f);
+        }
+        break;
+      case 3:
+        if (this->emonthsensor != nullptr) {
+          uint16_t v = this->messagedata[33] + this->messagedata[34]*256;
+          this->emonthsensor->publish_state((float)v);
+        }
+        break;
+      case 2:
+        if (this->etotalsensor != nullptr) {
+          uint16_t v = this->messagedata[14] + this->messagedata[15]*256;
+          this->etotalsensor->publish_state((float)v);
+        }
+        break;
+      case 1:
+        if (this->tigbtsensor != nullptr) {
+          uint16_t v = this->messagedata[12] + this->messagedata[13]*256;
+          this->tigbtsensor->publish_state((float)v*0.1f);
+        } 
+        break;
+    }
+    this->sensorupdateprogress--;
+  }
+
   static char buffer[SOLIS_S5_SERIAL_BUFFER_LEN] = {0};
   static uint8_t index = 0;
   static uint8_t loopwait = 0;
@@ -67,95 +190,11 @@ void SolisS5Component::loop() {
 
 void SolisS5Component::update() {
   if (this->messagelength > 0) { // if there's a message pending
-
-    if (this->vdc1sensor != nullptr) {
-      uint16_t v = this->messagedata[4] + this->messagedata[5]*256;
-      this->vdc1sensor->publish_state((float)v * 0.1f);
-    }
-    if (this->vdc2sensor != nullptr) {
-      uint16_t v = this->messagedata[28] + this->messagedata[29]*256;
-      this->vdc2sensor->publish_state((float)v * 0.1f);
-    }
-    if (this->vacusensor != nullptr) {
-      uint16_t v = this->messagedata[8] + this->messagedata[9]*256;
-      this->vacusensor->publish_state((float)v * 0.1f);
-    }
-    if (this->vacvsensor != nullptr) {
-      uint16_t v = this->messagedata[74] + this->messagedata[75]*256;
-      this->vacvsensor->publish_state((float)v * 0.1f);
-    }
-    if (this->vacwsensor != nullptr) {
-      uint16_t v = this->messagedata[70] + this->messagedata[71]*256;
-      this->vacwsensor->publish_state((float)v * 0.1f);
-    }
-
-    if (this->idc1sensor != nullptr) {
-      uint16_t v = this->messagedata[6] + this->messagedata[7]*256;
-      this->idc1sensor->publish_state((float)v * 0.1f);
-    }
-    if (this->idc2sensor != nullptr) {
-      uint16_t v = this->messagedata[30] + this->messagedata[31]*256;
-      this->idc2sensor->publish_state((float)v * 0.1f);
-    }
-    if (this->iacusensor != nullptr) {
-      uint16_t v = this->messagedata[10] + this->messagedata[11]*256;
-      this->iacusensor->publish_state((float)v * 0.1f);
-    }
-    if (this->iacvsensor != nullptr) {
-      uint16_t v = this->messagedata[76] + this->messagedata[77]*256;
-      this->iacvsensor->publish_state((float)v * 0.1f);
-    }
-    if (this->iacwsensor != nullptr) {
-      uint16_t v = this->messagedata[72] + this->messagedata[73]*256;
-      this->iacwsensor->publish_state((float)v * 0.1f);
-    }
-
-    if (this->pdc1sensor != nullptr) {
-      uint16_t v1 = this->messagedata[4] + this->messagedata[5]*256;
-      uint16_t i1 = this->messagedata[6] + this->messagedata[7]*256;
-      this->pdc1sensor->publish_state((float)v1 * (float)i1 * 0.01f);
-    }
-    
-    if (this->pdc2sensor != nullptr) {
-      uint16_t v2 = this->messagedata[28] + this->messagedata[29]*256;
-      uint16_t i2 = this->messagedata[30] + this->messagedata[31]*256;
-      this->pdc2sensor->publish_state((float)v2 * (float)i2 * 0.01f);
-    }
-    
-    if (this->pactotalsensor != nullptr) {
-      uint16_t v = this->messagedata[59] + this->messagedata[60]*256;
-      this->pactotalsensor->publish_state((float)v);
-    }
-    
-    if (this->vaactotalsensor != nullptr) {
-      uint16_t v = this->messagedata[65] + this->messagedata[66]*256;
-      this->vaactotalsensor->publish_state((float)v);
-    }
-    if (this->pfacsensor != nullptr) {
-      uint16_t v = this->messagedata[68] + this->messagedata[69]*256;
-      this->pfacsensor->publish_state((float)v * 0.1f);
-    }            
-
-    if (this->edaysensor != nullptr) {
-      uint16_t v = this->messagedata[37] + this->messagedata[38]*256;
-      this->edaysensor->publish_state((float)v*0.1f);
-    }
-    if (this->emonthsensor != nullptr) {
-      uint16_t v = this->messagedata[33] + this->messagedata[34]*256;
-      this->emonthsensor->publish_state((float)v);
-    }
-    if (this->etotalsensor != nullptr) {
-      uint16_t v = this->messagedata[14] + this->messagedata[15]*256;
-      this->etotalsensor->publish_state((float)v);
-    }
-
-    if (this->tigbtsensor != nullptr) {
-      uint16_t v = this->messagedata[12] + this->messagedata[13]*256;
-      this->tigbtsensor->publish_state((float)v*0.1f);
-    }
-
-    this->messagelength = 0; // indicate the message has been parsed
-
+    ESP_LOGV(TAG, "processing latest message");
+    this->messagelength = 0; // indicate message is parsed   
+    this->sensorupdateprogress = SOLIS_S5_SENSOR_COUNT; // start to update sensors
+  } else {
+    ESP_LOGV(TAG, "no data received");
   }
 }
 

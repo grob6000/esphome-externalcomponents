@@ -8,14 +8,10 @@
 
 #define SOLIS_S5_LOOP_WAIT 5
 #define SOLIS_S5_SERIAL_BUFFER_LEN 150
+#define SOLIS_S5_SENSOR_COUNT 19
 
 namespace esphome {
 namespace solis_s5 {
-
-typedef struct {
-  uint8_t * data;
-  uint8_t length;
-} SolisS5Message;
 
 class SolisS5Component : public PollingComponent, public uart::UARTDevice {
   public:
@@ -50,6 +46,7 @@ class SolisS5Component : public PollingComponent, public uart::UARTDevice {
     void set_t_igbt_sensor(sensor::Sensor *s) { tigbtsensor = s; }
 
   protected:
+
     sensor::Sensor *vdc1sensor;
     sensor::Sensor *vdc2sensor;
     sensor::Sensor *vacusensor;
@@ -74,8 +71,9 @@ class SolisS5Component : public PollingComponent, public uart::UARTDevice {
 
     sensor::Sensor *tigbtsensor;
 
-    uint8_t messagedata[SOLIS_S5_SERIAL_BUFFER_LEN] = {0};
+    char messagedata[SOLIS_S5_SERIAL_BUFFER_LEN] = {0};
     uint8_t messagelength = 0;
+    volatile uint8_t sensorupdateprogress = 0;
 
 };
 
