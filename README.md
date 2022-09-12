@@ -16,7 +16,7 @@ Frequency on my device is about 30Hz; this will vary depending on how much other
 Usage is similar to a [gpio_binary_sensor](https://esphome.io/components/binary_sensor/gpio.html). Supports all the configuration [binary_sensor](https://esphome.io/components/binary_sensor/index.html) supports.
 
 | Config | Required? | Type | Default | Description |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | `pin_sensor` | required | pin_schema | | pin for the sensor input; as per 'pin' configuration of gpio_binary_sensor |
 | `pin_driver` | required | pin_schema | | pin for the output led (or similar) |
 | `pin_output` | optional | pin_schema | none | pin to output the state of the beam sensor directly (e.g. for a local led) |
