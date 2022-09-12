@@ -65,7 +65,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_PAC_TOTAL):
         sensor.sensor_schema(device_class=DEVICE_CLASS_POWER,unit_of_measurement=UNIT_WATT,accuracy_decimals=0,state_class=STATE_CLASS_MEASUREMENT).extend(), 
     cv.Optional(CONF_VAAC_TOTAL):
-        sensor.sensor_schema(device_class=DEVICE_CLASS_POWER,unit_of_measurement=UNIT_VOLT_AMPS,accuracy_decimals=0,state_class=STATE_CLASS_MEASUREMENT).extend(),    
+        sensor.sensor_schema(device_class=DEVICE_CLASS_APPARENT_POWER,unit_of_measurement=UNIT_VOLT_AMPS,accuracy_decimals=0,state_class=STATE_CLASS_MEASUREMENT).extend(),    
     cv.Optional(CONF_PFAC):
         sensor.sensor_schema(device_class=DEVICE_CLASS_POWER_FACTOR,accuracy_decimals=3,state_class=STATE_CLASS_MEASUREMENT).extend(),
 
