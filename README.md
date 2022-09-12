@@ -15,11 +15,11 @@ Frequency on my device is about 30Hz; this will vary depending on how much other
 
 Usage is similar to a [gpio_binary_sensor](https://esphome.io/components/binary_sensor/gpio.html). Supports all the configuration [binary_sensor](https://esphome.io/components/binary_sensor/index.html) supports.
 
-| Config | Required? | Type | Description |
+| Config | Required? | Type | Default | Description |
 | --- | --- | --- | --- |
-| `pin_sensor` | required | pin_schema | pin for the sensor input; as per 'pin' configuration of gpio_binary_sensor |
-| `pin_driver` | required | pin_schema | pin for the output led (or similar) |
-| `pin_output` | optional | pin_schema | pin to output the state of the beam sensor directly (e.g. for a local led) |
+| `pin_sensor` | required | pin_schema | | pin for the sensor input; as per 'pin' configuration of gpio_binary_sensor |
+| `pin_driver` | required | pin_schema | | pin for the output led (or similar) |
+| `pin_output` | optional | pin_schema | none | pin to output the state of the beam sensor directly (e.g. for a local led) |
 
 ## solis_s5
 For connection of esphome to a Ginlong Solis S5 solar inverter using the RS485 COM port. I wanted to connect the inverter to Home Assistant without using a cloud service (i.e. on the local network), to minimise delay and dependence on the Solis API and internet connection being functional. However, my solar installer uses the cloud service for warranty and support, so I wanted to keep this data being delivered. The Solis wifi dongle software does not provide reliable means of adding an additional server connection, so I needed to bypass it / work in parallel. I love ESPhome, so here we are.
@@ -29,6 +29,10 @@ Currently, this component is designed only to listen-in to the messages sent fro
 After some effort reverse-engineering the protocol, we can obtain most primary operational values from the inverter at a reasonable frequency (looks like about 1/min).
 
 Config is relatively self-explanatory, please see the example file soliss5.yaml. This shows all the sensors you can configure. All sensors are optional (delete them if you don't want them). Each is a `sensor` schema, so all options from [base sensor configuration](https://esphome.io/components/sensor/index.html#base-sensor-configuration) can be used.
+
+| Config | Required? | Type | Default | Description |
+| --- | --- | --- | --- | --- |
+| `update_interval` | optional | time | `'60s'` | minimum interval for reporting values. only sends the last received state each period. set to 1s to receive everything |
 
 ### Hardware:
 1. Node-MCU / Wemos or similar ESP8266 or ESP32 device
