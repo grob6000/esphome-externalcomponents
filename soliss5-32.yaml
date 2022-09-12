@@ -1,13 +1,13 @@
 esphome:
-  name: soliss5-32
+  name: soliss5
 
 external_components:
-  source:
-     type: local
-     path: ./components
 #  source:
-#    type: git
-#    url: https://github.com/grob6000/esphome-externalcomponents
+#     type: local
+#     path: ./components
+  source:
+    type: git
+    url: https://github.com/grob6000/esphome-externalcomponents
   
 esp32:
   board: nodemcu-32s
@@ -15,7 +15,6 @@ esp32:
 # Enable logging
 logger:
   baud_rate: 0
-  level: VERBOSE
 
 # Enable Home Assistant API
 api:
