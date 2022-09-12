@@ -108,7 +108,7 @@ void SolisS5Component::loop() {
       case 5:
         if (this->pfacsensor != nullptr) {
           uint16_t v = this->messagedata[68] + this->messagedata[69]*256;
-          this->pfacsensor->publish_state((float)v * 0.1f);
+          this->pfacsensor->publish_state((float)v * 0.001f);
         }
         break;
       case 4:            
