@@ -7,7 +7,7 @@ I've included some examples also.
 Intended for infra-red (IR) sensors that include both an led and sensor (e.g. beam sensors,reflective sensors, etc.), e.g. [TCTR5000](https://www.vishay.com/docs/83760/tcrt5000.pdf), [RPR220](https://fscdn.rohm.com/en/products/databook/datasheet/opto/optical_sensor/photosensor/rpr-220.pdf), etc. In particular, may be helpful for optical sensors where ambient light might make erroneous readings (e.g. rotating dials on gas and water meters).
 
 Beam binary sensor will alternate an output 'driver' (e.g. ir led) `ON` and `OFF`.
-Frequency on my device is about 30Hz; this will vary depending on how much other code you have on the device), and only publish `ON` if during the cycle both. This frequency is about half of the frequency of a normal gpio binary sensor. If you want to pick up much shorter duration pulses, this might not be capable - see [pulse_counter](https://esphome.io/components/sensor/pulse_counter.html) instead.
+Frequency on my device is about 30Hz; this will vary depending on how much other code you have on the device), and only publish `ON` if the sensor responds accordingly (input==ON-->output==ON, input==OFF-->output==OFF). This frequency is about half of the frequency of a normal gpio binary sensor. If you want to pick up much shorter duration pulses, this might not be capable - see [pulse_counter](https://esphome.io/components/sensor/pulse_counter.html) instead.
 1. Sensor is `ON` when Driver is `ON`
 2. Sensor is `OFF` when Driver is `OFF`
 This ensures that the sensor is not activated erroneously by ambient light (e.g. sunlight).
