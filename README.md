@@ -33,19 +33,10 @@ Config is relatively self-explanatory, please see the example file soliss5.yaml.
 1. Node-MCU / Wemos or similar ESP8266 device
 2. RS485:TTL serial converter
 3. Solis Wifi dongle
-- The RS485 dongle is connected to the ESP8266 device & taped together (make sure they're not shorted together - a bit of double sided tape worked for me (see connections below). Recommend only connecting RX, as there's no TX functionality at this point (and this might interfere with the correct operation of the exisiting wifi dongle).
-- You can disassemble the solis dongle by popping the 4 tabs at the top, and pulling the board/connector out. Inside, the solis board connects to the connector using a 4-pin JST-XH connector, on mine the pins were helpfully labelled GND, A, B, 5V. Connect the esp8266/rs485 module in parallel to the existing connection (e.g. by soldering wires - I used an extra JST connector, soldered onto the back of the board, so I could pop it in and out easily for testing).
-- Wrap the piggy-back in insulating tape.
-- Reassemble the dongle with the piggy-back inside, slipping the piggy-back down in the large amount of free space on the rear side of the existing board.
-- Voila, one parallel wifi connection to your inverter!
 
-| Wemos Pin | RS485 Module TTL Connection | RS485 Module Bus Connection | Solis Wifi Dongle Pin |
-| --- | --- | --- | --- |
-| GND | | | GND |
-| VIN | | | 5V |
-| GND | GND | | |
-| RX | RXD | | |
-| 3V3 | VCC | | |
-| GND | | GND | |
-| | | A | A |
-| | | B | B |
+Connect as per [schematic](https://github.com/grob6000/esphome-externalcomponents/blob/master/solis_piggyback_schematic_0.pdf).
+
+I did the following:
+1. Assembled and connected the esp and rs485 modules together & wrapped with insulation tape.
+2. Soldered wires between this and the back of the 4-pin JST connector on the solis wifi stick board.
+3. Placing this against the back of the solis wifi stick board, the whole assembly could be reinstalled in the original case.
