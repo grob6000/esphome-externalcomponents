@@ -28,11 +28,15 @@ Currently, this component is designed only to listen-in to the messages sent fro
 
 After some effort reverse-engineering the protocol, we can obtain most primary operational values from the inverter at a reasonable frequency (looks like about 1/min).
 
-Config is relatively self-explanatory, please see the example file soliss5.yaml. This shows all the sensors you can configure. All sensors are optional (delete them if you don't want them). Each is a `sensor` schema, so all options from [base sensor configuration](https://esphome.io/components/sensor/index.html#base-sensor-configuration) can be used.
+Config is relatively self-explanatory, please see the example file soliss5.yaml. This shows all the sensors you can configure. All sensors are optional (delete them if you don't want them). Each is a `sensor` schema, so all options from [base sensor configuration](https://esphome.io/components/sensor/index.html#base-sensor-configuration) can be used. You can also configure a polling interval (default is 60s), and the uart port to use (by id).
 
 | Config | Required? | Type | Default | Description |
 | --- | --- | --- | --- | --- |
+| `uart_id` | optional | `id` | `UART0` | uart bus to read from; default is UART0 (pin1/3) |
 | `update_interval` | optional | time | `'60s'` | minimum interval for reporting values. only sends the last received state each period. set to 1s to receive everything |
+| `voltage_dc_1` | optional | `sensor_schema` | none | Inverter DC Voltage 1 |
+| `voltage_dc_2` | optional | `sensor_schema` | none | Inverter DC Voltage 2 |
+| ... etc ... | | | | see example config [soliss5.yaml](https://github.com/grob6000/esphome-externalcomponents/blob/master/soliss5.yaml) for full list of sensors|
 
 ### Hardware:
 1. Node-MCU / Wemos or similar ESP8266 or ESP32 device
