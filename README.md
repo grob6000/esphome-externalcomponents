@@ -1,5 +1,5 @@
 # esphome-externalcomponents
-Some external components for [esphome](https://esphome.io/index.html). Please refer to the esphome website for information about how esphome works, and how to set up and flash devices with espohome.
+Some external components for [esphome](https://esphome.io/index.html). Please refer to the esphome website for information about how esphome works, and how to set up and flash devices with esphome.
 ## Usage
 [See here for how to use external components](https://esphome.io/components/external_components.html).
 I've included some examples also.
