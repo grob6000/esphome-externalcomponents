@@ -15,6 +15,7 @@ esp32:
 # Enable logging
 logger:
   baud_rate: 0
+  level: debug
 
 # Enable Home Assistant API
 api:
@@ -49,7 +50,12 @@ uart:
   tx_pin: 1
   rx_pin: 3
   baud_rate: 9600
-
+  #debug: # uncomment this to see the raw data in the log - useful if you need to decode a different protocol
+  #  direction: BOTH
+  #  dummy_receiver: false
+  #  after:
+  #    timeout: 100ms
+  
 solis_s5:
   id: solisinverter
   uart_id: uart_bus
